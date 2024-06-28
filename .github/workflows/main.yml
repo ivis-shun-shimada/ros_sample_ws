@@ -24,22 +24,35 @@ jobs:
       with:
         path: ros2_ws/src/ros_sample_ws/simple_topic
         
+    - name: Cache ROS dependencies
+      id: cache-ros-deps
+      uses: actions/cache@v2
+      with:
+        path: ~/.ros/rosdep
+        key: ${{ runner.os }}-rosdep-${{ hashFiles('**/package.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-rosdep-
 
     - name: Install dependencies
       run: |
         rosdep update && 
         apt-get update && 
         rosdep install --from-path . -i -y --rosdistro ${{ matrix.rosdistro }}
+        
     - name: Set up ROS2 workspace
       id: build_test
       run: |
         . /opt/ros/${{ matrix.rosdistro }}/setup.sh && colcon build
-        cd ~/.ros/rosdep
-        pwd
-        ls
+        
     - name: build_test command success
       if: steps.build_test.outcome == 'success'
       run: echo "result - success"
     - name: build_test command failure
       if: steps.build_test.outcome == 'failure'
       run: echo "result - failure" && exit 1
+    - name: cache_test command success
+      if: steps.cache-ros-deps.outputs.cache-hit != 'true'
+      run: echo "cache-hit result - true"
+    - name: cache_test command failure
+      if: steps.cache-ros-deps.outputs.cache-hit != 'false'
+      run: echo "cache-hit result - false"
