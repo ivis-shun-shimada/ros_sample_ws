@@ -27,7 +27,7 @@ jobs:
     - name: Set up ROS2 workspace
       id: build_test
       run: |
-        source /opt/ros/humble/setup.sh && colcon build
+        . /opt/ros/${{ matrix.rosdistro }}/setup.sh && colcon build
     - name: build_test command success
       if: steps.build_test.outcome == 'success'
       run: echo "result - success"
