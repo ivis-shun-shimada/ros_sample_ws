@@ -51,4 +51,8 @@ jobs:
       if: steps.build_test.outcome == 'failure'
       run: echo "result - failure" && exit 1
     - name: cache_test command success
-      run: echo steps.cache-ros-deps.outputs.cache-hit
+      if: steps.cache-ros-deps.outputs.cache-hit == 'false'
+      run: echo "start install"
+    - name: cache_test command failure
+      if: steps.cache-ros-deps.outputs.cache-hit == 'true'
+      run: echo "skip install"
