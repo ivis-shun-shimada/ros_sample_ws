@@ -41,6 +41,7 @@ jobs:
       run: echo "skip install"
       
     - name: Install dependencies
+      if: steps.cache-ros-deps.outputs.cache-hit == 'false'
       run: |
         rosdep update && 
         apt-get update && 
