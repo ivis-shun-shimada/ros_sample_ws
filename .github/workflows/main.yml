@@ -8,7 +8,7 @@ jobs:
   ros2_build:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/${{ github.repository }}/ros2_humble:latest
+      image: ghcr.io/ros2_humble:latest
       
     steps:
     - name: Checkout repository
