@@ -55,4 +55,7 @@ jobs:
       run: echo "start install"
     - name: cache_test command failure
       if: steps.cache-ros-deps.outputs.cache-hit == 'true'
-      run: echo "skip install"
+      run: |
+        echo "skip install"
+        echo "${{ runner.os }}"
+    
