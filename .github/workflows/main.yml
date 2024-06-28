@@ -35,6 +35,8 @@ jobs:
       run: |
         . /opt/ros/${{ matrix.rosdistro }}/setup.sh && colcon build
         cd ~/.ros/rosdep
+        pwd
+        ls
     - name: build_test command success
       if: steps.build_test.outcome == 'success'
       run: echo "result - success"
