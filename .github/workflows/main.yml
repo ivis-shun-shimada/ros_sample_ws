@@ -5,6 +5,16 @@ on:
   workflow_dispatch:
 
 jobs:
+  image_check:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Check if image exists
+        id: image-checking
+        run: |
+          if docker pull ghcr.io/${{ github.repository_owner }}/ros2_humble:latest; then
+            echo "Image already exists"
+            echo "::set-output name=image-exists::true"
+          
   ros2_build:
     runs-on: ubuntu-latest
     container:
