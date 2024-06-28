@@ -2,34 +2,31 @@ name: ROS2 CI
 
 on:
   push:
-  workflow_dispatch:
 
 jobs:
-  image_check:
-      runs-on: ubuntu-latest
-      steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Check if image exists
-        id: image-checking
-        run: |
-          if docker pull ghcr.io/${{ github.repository_owner }}/ros2_humble:latest; then
-            echo "Image already exists"
-            echo "::set-output name=image-exists::true"
-          
   ros2_build:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-22.04
+        rosdistro:
+          - humble
+
     runs-on: ubuntu-latest
+
     container:
-      image: ghcr.io/${{ github.repository_owner }}/ros2_humble
-      
+      image: ros:${{ matrix.rosdistro }}-ros-base
     steps:
+    - name: Setup directories
+      run: mkdir -p ros2_ws/src
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        path: ros2_ws/src/ros_sample_ws/simple_topic
 
     - name: Set up ROS2 workspace
       id: build_test
       run: |
-        cd /root/ros2_ws/
         source /opt/ros/humble/setup.sh && colcon build
     - name: build_test command success
       if: steps.build_test.outcome == 'success'
