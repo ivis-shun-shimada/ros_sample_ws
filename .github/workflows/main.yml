@@ -2,6 +2,7 @@ name: ROS2 CI
 
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   ros2_build:
