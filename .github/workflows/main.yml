@@ -24,7 +24,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: ros2_ws/src/ros_sample_ws/simple_topic
-    - name: Cache ROS dependencies
+    - name: Cache apt
       uses: awalsh128/cache-apt-pkgs-action@latest
       with:
         version: 1.0
