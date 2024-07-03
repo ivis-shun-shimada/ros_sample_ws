@@ -49,8 +49,6 @@ jobs:
 #        key: ${{ runner.os }}-ros-${{ hashFiles('**/package.xml') }}
 #        restore-keys: |
 #          ${{ runner.os }}-ros-
-#    - name: Display file content
-#      run: cat my-directory/myfile.txt
 #    - name: cache_test command success
 #      if: steps.cache-ros-deps.outputs.cache-hit == 'false'
 #      run: echo "start install"
