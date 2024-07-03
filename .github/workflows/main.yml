@@ -24,34 +24,47 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: ros2_ws/src/ros_sample_ws/simple_topic
-
-    - name: Cache ROS dependencies
-      id: cache-ros-deps
+    - name: Cache test_dir
+      id: test-dir-cache
       uses: actions/cache@v2
       with:
-        path: ~/.ros/rosdep
-        key: ${{ runner.os }}-rosdep-${{ hashFiles('**/package.xml') }}
+        path: test_dir
+        key: ${{ runner.os }}-test-dir-${{ hashFiles('test_dir/**') }}
         restore-keys: |
-          ${{ runner.os }}-rosdep-
-          
-    - name: cache_test command success
-      if: steps.cache-ros-deps.outputs.cache-hit == 'false'
-      run: echo "start install"
-    - name: cache_test command failure
-      if: steps.cache-ros-deps.outputs.cache-hit == 'true'
-      run: echo "skip install"
+          ${{ runner.os }}-test-dir-
+    - name: Create cache and add a file (if not cached)
+      if: steps.test-dir-cache.outputs.cache-hit != 'true'
+      run: |
+        mkdir -p test_dir
+        echo "Hello, World!" > test_dir/myfile.txt
+    - name: test_dir cache hit
+      if: steps.test-dir-cache.outputs.cache-hit == 'true'
+      run: cat my-directory/myfile.txt        
+
+#    - name: Cache ROS dependencies
+#      id: cache-ros-deps
+#      uses: actions/cache@v2
+#      with:
+#        path: /var/lib/apt/lists
+#        key: ${{ runner.os }}-ros-${{ hashFiles('**/package.xml') }}
+#        restore-keys: |
+#          ${{ runner.os }}-ros-
+#    - name: Display file content
+#      run: cat my-directory/myfile.txt
+#    - name: cache_test command success
+#      if: steps.cache-ros-deps.outputs.cache-hit == 'false'
+#      run: echo "start install"
+#    - name: cache_test command failure
+#      if: steps.cache-ros-deps.outputs.cache-hit == 'true'
+#      run: echo "skip install"
       
     - name: Install dependencies
-      #if: steps.cache-ros-deps.outputs.cache-hit == 'false'
+#      if: steps.cache-ros-deps.outputs.cache-hit == 'false'
       run: |
         rosdep update && 
         apt-get update && 
         rosdep install --from-path . -i -y --rosdistro ${{ matrix.rosdistro }}
-    - name: Cache apt
-      uses: awalsh128/cache-apt-pkgs-action@latest
-      with:
-        packages: "null"
-        version: 1.0
+
     - name: Set up ROS2 workspace
       id: build_test
       run: |
