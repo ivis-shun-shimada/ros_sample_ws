@@ -39,7 +39,7 @@ jobs:
         echo "Hello, World!" > test_dir/myfile.txt
     - name: test_dir cache hit
       if: steps.test-dir-cache.outputs.cache-hit == 'true'
-      run: cat my-directory/myfile.txt        
+      run: cat test_dir/myfile.txt        
 
 #    - name: Cache ROS dependencies
 #      id: cache-ros-deps
