@@ -36,10 +36,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-ros-
           
-    - name: cache_test command success
+    - name: Cache not restored (package.xml change)
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: echo "on rosdep install"
-    - name: cache_test command failure
+    - name: Cache restored(package.xml no change)
       if: steps.cache-ros-packages.outputs.cache-hit == 'true'
       run: echo "off rosdep install"
       
@@ -53,6 +53,7 @@ jobs:
 
     - name: Set up ROS2 workspace
       id: build_workspace
+      if: steps.cache-ros-deps.outputs.cache-hit != 'true'
       run: |
         . /opt/ros/${{ matrix.rosdistro }}/setup.sh && colcon build
         
