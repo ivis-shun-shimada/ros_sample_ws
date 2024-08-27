@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     container:
-      image: ghcr.io/ivis-shun-shimada/base-humble-image:latest
+      image: ghcr.io/ivis-shun-shimada/base-humble-image:v2
       
     steps:
     - name: Create cache and add a file (if not cached)
