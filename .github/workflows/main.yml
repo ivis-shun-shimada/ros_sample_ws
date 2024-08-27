@@ -6,32 +6,12 @@ on:
 
 jobs:
   ros2_build:
-    strategy:
-      matrix:
-        os:
-          - ubuntu-22.04
-        rosdistro:
-          - humble
-
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     container:
-      image: ros:${{ matrix.rosdistro }}-ros-base
+      image: ghcr.io/ivis-shun-shimada/base-humble-image:latest
+      
     steps:
-    - name: Setup directories
-      run: mkdir -p ros2_ws/src
-    - name: Checkout repository
-      uses: actions/checkout@v2
-      with:
-        path: ros2_ws/src/ros_sample_ws/simple_topic
-    - name: Cache test_dir
-      id: test-dir-cache
-      uses: actions/cache@v2
-      with:
-        path: test_dir
-        key: ${{ runner.os }}-test-dir-${{ hashFiles('test_dir/**') }}
-        restore-keys: |
-          ${{ runner.os }}-test-dir-
     - name: Create cache and add a file (if not cached)
       if: steps.test-dir-cache.outputs.cache-hit != 'true'
       run: |
