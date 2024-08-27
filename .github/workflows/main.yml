@@ -31,9 +31,10 @@ jobs:
       id: cache-ros-packages
       uses: actions/cache@v2
       with:
-        path: package
+        path: test_dir
         key: ${{ runner.os }}-ros-${{ hashFiles('**/package.xml') }}
-          
+        restore-keys: |
+          ${{ runner.os }}-ros-
     - name: cache_test command success
       if: steps.cache-ros-packages.outputs.cache-hit == 'false'
       run: echo "on rosdep install"
