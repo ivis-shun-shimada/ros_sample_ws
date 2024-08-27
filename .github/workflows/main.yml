@@ -22,26 +22,26 @@ jobs:
         echo "Hello, World!" > test_dir/myfile.txt
     - name: test_dir cache hit
       if: steps.test-dir-cache.outputs.cache-hit == 'true'
-      run: cat test_dir/myfile.txt        
-
-#    - name: Cache ROS dependencies
-#      id: cache-ros-deps
-#      uses: actions/cache@v2
-#      with:
-#        path: /var/lib/apt/lists
-#        key: ${{ runner.os }}-ros-${{ hashFiles('**/package.xml') }}
-#        restore-keys: |
-#          ${{ runner.os }}-ros-
-#    - name: cache_test command success
-#      if: steps.cache-ros-deps.outputs.cache-hit == 'false'
-#      run: echo "start install"
-#    - name: cache_test command failure
-#      if: steps.cache-ros-deps.outputs.cache-hit == 'true'
-#      run: echo "skip install"
+      run: cat test_dir/myfile.txt
+      
     - name: Check out repository code
       uses: actions/checkout@v4
+      
+    - name: Cache ROS package.xml
+      id: cache-ros-packages
+      uses: actions/cache@v2
+      with:
+        key: ${{ runner.os }}-ros-${{ hashFiles('**/package.xml') }}
+          
+    - name: cache_test command success
+      if: steps.cache-ros-packages.outputs.cache-hit == 'false'
+      run: echo "on rosdep install"
+    - name: cache_test command failure
+      if: steps.cache-ros-packages.outputs.cache-hit == 'true'
+      run: echo "off rosdep install"
+      
     - name: Install dependencies
-#      if: steps.cache-ros-deps.outputs.cache-hit == 'false'
+      if: steps.cache-ros-deps.outputs.cache-hit == 'false'
       run: |
         sudo rosdep init &&
         rosdep update && 
@@ -49,16 +49,17 @@ jobs:
         rosdep install --from-path . -i -y --rosdistro ${{ matrix.rosdistro }}
 
     - name: Set up ROS2 workspace
-      id: build_test
+      id: build_workspace
       run: |
         . /opt/ros/${{ matrix.rosdistro }}/setup.sh && colcon build
         
     - name: build_test command success
-      if: steps.build_test.outcome == 'success'
+      if: steps.build_workspace.outcome == 'success'
       run: echo "result - success"
-    - name: build_test command failure
-      if: steps.build_test.outcome == 'failure'
+    - name: build_workspace command failure
+      if: steps.build_workspace.outcome == 'failure'
       run: echo "result - failure" && exit 1
+      
     - name: test action commit msg flg
       if: "! contains(github.event.head_commit.message, 'test')"
       run: echo "commit message not input test!"
