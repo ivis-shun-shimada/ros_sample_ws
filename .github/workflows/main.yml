@@ -38,7 +38,8 @@ jobs:
 #    - name: cache_test command failure
 #      if: steps.cache-ros-deps.outputs.cache-hit == 'true'
 #      run: echo "skip install"
-      
+    - name: Check out repository code
+      uses: actions/checkout@v4
     - name: Install dependencies
 #      if: steps.cache-ros-deps.outputs.cache-hit == 'false'
       run: |
