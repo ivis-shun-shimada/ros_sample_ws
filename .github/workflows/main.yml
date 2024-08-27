@@ -39,6 +39,7 @@ jobs:
     - name: Install dependencies
 #      if: steps.cache-ros-deps.outputs.cache-hit == 'false'
       run: |
+        sudo rosdep init &&
         rosdep update && 
         apt-get update && 
         rosdep install --from-path . -i -y --rosdistro humble
