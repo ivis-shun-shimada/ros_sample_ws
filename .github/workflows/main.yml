@@ -7,7 +7,8 @@ on:
 jobs:
   ros2_build:
     runs-on: ubuntu-22.04
-
+    env:
+      ROS_VERSION: humble
     container:
       image: ghcr.io/ivis-shun-shimada/base-humble-image:v2
       
@@ -42,12 +43,12 @@ jobs:
         sudo rosdep init &&
         rosdep update && 
         apt-get update && 
-        rosdep install --from-path . -i -y --rosdistro humble
+        rosdep install --from-path . -i -y --rosdistro $ROS_VERSION
 
     - name: Set up ROS2 workspace
       id: build_test
       run: |
-        . /opt/ros/${{ matrix.rosdistro }}/setup.sh && colcon build
+        . /opt/ros/$ROS_VERSION/setup.sh && colcon build
         
     - name: build_test command success
       if: steps.build_test.outcome == 'success'
