@@ -36,7 +36,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-ros-
     - name: cache hit check
-      run: echo steps.cache-ros-packages.outputs.cache-hit
+      run: echo ${{steps.cache-ros-packages.outputs.cache-hit}}
     - name: cache_test command success
       if: steps.cache-ros-packages.outputs.cache-hit == 'false'
       run: echo "on rosdep install"
