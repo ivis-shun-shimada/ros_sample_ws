@@ -46,10 +46,14 @@ jobs:
         rosdep update && 
         apt-get update && 
         rosdep install --from-path . -i -y --rosdistro ${{ matrix.rosdistro }}
-
+        
+    - name: update docker image
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
+      run: docker push ghcr.io/ivis-shun-shimada/base-humble-image:v2
+      
     - name: Set up ROS2 workspace
       id: build_workspace
-      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
+      if: steps.cache-ros-packages.outputs.cache-hit == 'true'
       run: |
         . /opt/ros/${{ matrix.rosdistro }}/setup.sh && colcon build
         
