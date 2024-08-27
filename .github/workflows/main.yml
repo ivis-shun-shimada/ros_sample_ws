@@ -31,6 +31,7 @@ jobs:
       id: cache-ros-packages
       uses: actions/cache@v2
       with:
+        path: package
         key: ${{ runner.os }}-ros-${{ hashFiles('**/package.xml') }}
           
     - name: cache_test command success
