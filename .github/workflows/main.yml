@@ -15,15 +15,11 @@ jobs:
       image: ghcr.io/ivis-shun-shimada/base-humble-image:v2
       
     steps:
-    - name: Create cache and add a file (if not cached)
-      if: steps.test-dir-cache.outputs.cache-hit != 'true'
+    - name: test dir
       run: |
         mkdir -p test_dir
         echo "Hello, World!" > test_dir/myfile.txt
-    - name: test_dir cache hit
-      if: steps.test-dir-cache.outputs.cache-hit == 'true'
-      run: cat test_dir/myfile.txt
-      
+
     - name: Check out repository code
       uses: actions/checkout@v4
       
@@ -44,7 +40,7 @@ jobs:
       run: echo "off rosdep install"
       
     - name: Install dependencies
-      if: steps.cache-ros-deps.outputs.cache-hit != 'true'
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: |
         sudo rosdep init &&
         rosdep update && 
@@ -53,7 +49,7 @@ jobs:
 
     - name: Set up ROS2 workspace
       id: build_workspace
-      if: steps.cache-ros-deps.outputs.cache-hit != 'true'
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: |
         . /opt/ros/${{ matrix.rosdistro }}/setup.sh && colcon build
         
