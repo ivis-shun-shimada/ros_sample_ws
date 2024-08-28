@@ -68,5 +68,5 @@ jobs:
     - name: docker exit
       run: exit
     - name: docekr check
-      run: docker ps && docker images
+      run: sudo docker ps
       
