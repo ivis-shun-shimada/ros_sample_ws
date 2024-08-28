@@ -6,13 +6,13 @@ on:
 
 jobs:
   ros2_build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
        rosdistro:
          - humble
-    container:
-      image: ghcr.io/ivis-shun-shimada/base-humble-image:v2
+    #container:
+    #  image: ghcr.io/ivis-shun-shimada/base-humble-image:v2
       
     steps:
     - name: setup docker
