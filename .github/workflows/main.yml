@@ -58,7 +58,5 @@ jobs:
       run: echo "commit message not input test!"
       
     - name: docker exit
-      run: exit && sudo apt-get update && sudo apt-get install -y docker.io
-    - name: docekr check
-      run: sudo systemctl start docker && ls -l && sudo docker ps
+      run: exit && echo "exit docker" && ls- l
       
