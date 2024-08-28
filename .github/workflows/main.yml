@@ -11,18 +11,10 @@ jobs:
       matrix:
        rosdistro:
          - humble
-    #container:
-    #  image: ghcr.io/ivis-shun-shimada/base-humble-image:v2
+    container:
+      image: ghcr.io/ivis-shun-shimada/base-humble-image:v2
       
     steps:
-    - name: setup docker
-      run: docker pull ghcr.io/ivis-shun-shimada/base-humble-image:v2
-    - name: docker check
-      run: docker images
-    - name: docekr run
-      run: docker run -i --name ros-container ghcr.io/ivis-shun-shimada/base-humble-image:v2
-    - name: docker dir
-      run: docker ps
     - name: test dir
       run: |
         mkdir -p test_dir
@@ -64,9 +56,7 @@ jobs:
     - name: test action commit msg flg
       if: "! contains(github.event.head_commit.message, 'test')"
       run: echo "commit message not input test!"
-      
-    - name: docker exit
-      run: exit
+
     - name: docker check
-      run: docker ps -a
+      run: CONTAINER_ID=$(docker ps -q --filter "ancestor=ghcr.io/ivis-shun-shimada/base-humble-image:v2")
       
