@@ -11,10 +11,11 @@ jobs:
       matrix:
        rosdistro:
          - humble
-    container:
-      image: ghcr.io/ivis-shun-shimada/base-humble-image:v2
+    #container:
+    # image: ghcr.io/ivis-shun-shimada/base-humble-image:v2
       
     steps:
+
     - name: test dir
       run: |
         mkdir -p test_dir
@@ -39,24 +40,25 @@ jobs:
       if: steps.cache-ros-packages.outputs.cache-hit == 'true'
       run: echo "off rosdep install"
       
+    - name: docker pull
+      run: docker pull ghcr.io/ivis-shun-shimada/base-humble-image:v2
+    - name: docker run
+      run: docker run -d --name ros-container ghcr.io/ivis-shun-shimada/base-humble-image:v2  
     - name: Install dependencies
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: |
-        sudo rosdep init &&
-        rosdep update && 
-        apt-get update && 
-        rosdep install --from-path . -i -y --rosdistro ${{ matrix.rosdistro }}
+        docker exec ros-container sh -c "sudo rosdep init" &&
+        docker exec ros-container sh -c "rosdep update" && 
+        docker exec ros-container sh -c "apt-get update" && 
+        docker exec ros-container sh -c "rosdep install --from-path . -i -y --rosdistro ${{ matrix.rosdistro }}"
       
     - name: Set up ROS2 workspace
       id: build_workspace
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: |
-        . /opt/ros/${{ matrix.rosdistro }}/setup.sh && colcon build
+        docker exec ros-container sh -c ". /opt/ros/${{ matrix.rosdistro }}/setup.sh" &&
+        docker exec ros-container sh -c "colcon build"
         
     - name: test action commit msg flg
       if: "! contains(github.event.head_commit.message, 'test')"
       run: echo "commit message not input test!"
-
-    - name: docker check
-      run: CONTAINER_ID=$(docker ps -q --filter "ancestor=ghcr.io/ivis-shun-shimada/base-humble-image:v2")
-      
