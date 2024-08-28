@@ -5,6 +5,12 @@ on:
   workflow_dispatch:
 
 jobs:
+  docker_set:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: docker check
+      run: sudo docker ps
+      
   ros2_build:
     runs-on: ubuntu-22.04
     strategy:
@@ -67,6 +73,4 @@ jobs:
       
     - name: docker exit
       run: exit
-    - name: docekr check
-      run: sudo docker ps
       
