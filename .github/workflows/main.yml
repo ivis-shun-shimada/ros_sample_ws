@@ -41,6 +41,12 @@ jobs:
       if: steps.cache-ros-packages.outputs.cache-hit == 'true'
       run: echo "off rosdep install"
       
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: docker pull
       run: docker pull ghcr.io/ivis-shun-shimada/base-humble-image:v2
     - name: docker run
