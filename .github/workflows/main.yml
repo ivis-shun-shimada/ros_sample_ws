@@ -24,7 +24,7 @@ jobs:
     - name: Check out repository code
       uses: actions/checkout@v4
       with:
-        path: $(pwd)/src/
+        path: src
     - name: Cache ROS package.xml
       id: cache-ros-packages
       uses: actions/cache@v2
