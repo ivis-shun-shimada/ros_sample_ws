@@ -22,7 +22,7 @@ jobs:
     - name: docekr run
       run: docker run -i --name ros-container ghcr.io/ivis-shun-shimada/base-humble-image:v2
     - name: docker dir
-      run: ls -l  
+      run: docker ps
     - name: test dir
       run: |
         mkdir -p test_dir
