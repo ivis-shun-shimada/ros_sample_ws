@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: docker check
-      run: sudo docker ps
+      run: sudo docker images
       
   ros2_build:
     runs-on: ubuntu-22.04
@@ -72,5 +72,5 @@ jobs:
       run: echo "commit message not input test!"
       
     - name: docker exit
-      run: exit
+      run: exit && sudo docker ps
       
