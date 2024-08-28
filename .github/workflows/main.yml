@@ -53,18 +53,10 @@ jobs:
       run: |
         . /opt/ros/${{ matrix.rosdistro }}/setup.sh && colcon build
         
-    - name: build_test command success
-      if: steps.build_workspace.outcome == 'success'
-      run: echo "result - success"
-    - name: build_workspace command failure
-      if: steps.build_workspace.outcome == 'failure'
-      run: echo "result - failure" && exit 1
-  
-      
     - name: test action commit msg flg
       if: "! contains(github.event.head_commit.message, 'test')"
       run: echo "commit message not input test!"
       
     - name: docker exit
-      run: sudo apt-get update && sudo apt-get install -y docker.io
+      run: exit && sudo apt-get update && sudo apt-get install -y docker.io
       
