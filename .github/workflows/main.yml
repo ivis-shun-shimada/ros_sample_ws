@@ -58,5 +58,7 @@ jobs:
       run: echo "commit message not input test!"
       
     - name: docker exit
-      run: exit && echo "exit docker" && ls- l
+      run: exit
+    - name: docker test
+      run: ls -l && docker ps
       
