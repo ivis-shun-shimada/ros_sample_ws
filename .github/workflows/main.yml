@@ -8,8 +8,8 @@ jobs:
   ros2_build:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
       contents: read
+      packages: write
     strategy:
       matrix:
        rosdistro:
