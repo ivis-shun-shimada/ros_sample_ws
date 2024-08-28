@@ -20,8 +20,9 @@ jobs:
     - name: docker check
       run: docker images
     - name: docekr run
-      run: docker run -iT --name ros-container ghcr.io/ivis-shun-shimada/base-humble-image:v2
-      
+      run: docker run -i --name ros-container ghcr.io/ivis-shun-shimada/base-humble-image:v2
+    - name: docker dir
+      run: ls -l  
     - name: test dir
       run: |
         mkdir -p test_dir
