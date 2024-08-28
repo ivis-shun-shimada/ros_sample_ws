@@ -18,8 +18,8 @@ jobs:
 
     - name: create src dir
       run: |
-        mkdir -p src_dir
-        echo "cache" > src_dir/cache
+        mkdir -p src
+        echo "cache" > src/cache
 
     - name: Check out repository code
       uses: actions/checkout@v4
@@ -29,7 +29,7 @@ jobs:
       id: cache-ros-packages
       uses: actions/cache@v2
       with:
-        path: src_dir/cache
+        path: src/cache
         key: ${{ runner.os }}-ros-${{ hashFiles('**/package.xml') }}
         restore-keys: |
           ${{ runner.os }}-ros-
