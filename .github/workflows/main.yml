@@ -71,10 +71,11 @@ jobs:
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker exec ros-container sh -c ". /opt/ros/${{ matrix.rosdistro }}/setup.sh; colcon build"
     - name: test file
-      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker exec ros-container sh -c "echo 'hello' > ./test_file.txt"
       
     - name: Commit docker continaer
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker commit ros-container ghcr.io/ivis-shun-shimada/base-humble-image:v2
     - name: Push docker image
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker push ghcr.io/ivis-shun-shimada/base-humble-image:v2
