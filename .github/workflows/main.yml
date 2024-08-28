@@ -66,6 +66,6 @@ jobs:
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker exec ros-container sh -c "colcon build"
     - name: Commit docker continaer
-      run: docker commit ros_container ghcr.io/ivis-shun-shimada/base-humble-image:v2
+      run: docker commit ros-container ghcr.io/ivis-shun-shimada/base-humble-image:v2
     - name: Push docker image
       run: docker push ghcr.io/ivis-shun-shimada/base-humble-image:v2
