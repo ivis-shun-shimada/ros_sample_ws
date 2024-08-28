@@ -66,5 +66,5 @@ jobs:
       run: echo "commit message not input test!"
       
     - name: docker exit
-      run: sudo apt update && sudo apt install docker.io
+      run: sudo apt-get update && sudo apt-get install -y docker.io
       
