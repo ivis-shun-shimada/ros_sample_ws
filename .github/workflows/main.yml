@@ -44,20 +44,26 @@ jobs:
       run: docker pull ghcr.io/ivis-shun-shimada/base-humble-image:v2
     - name: docker run
       run: docker run -d --name ros-container ghcr.io/ivis-shun-shimada/base-humble-image:v2  
-    - name: Install dependencies
+    - name: Install dependencies:rosdep init
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
-      run: |
-        docker exec ros-container sh -c "sudo rosdep init" &&
-        docker exec ros-container sh -c "rosdep update" && 
-        docker exec ros-container sh -c "apt-get update" && 
-        docker exec ros-container sh -c "rosdep install --from-path . -i -y --rosdistro ${{ matrix.rosdistro }}"
+      run: docker exec ros-container sh -c "sudo rosdep init"
+    - name: Install dependencies:rosdep update
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
+      run: docker exec ros-container sh -c "rosdep update"
+    - name: Install dependencies:apt update
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
+      run: docker exec ros-container sh -c "apt-get update"
+    - name: Install dependencies:rosdep install
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
+      run: docker exec ros-container sh -c "rosdep install --from-path . -i -y --rosdistro ${{ matrix.rosdistro }}"
       
     - name: Set up ROS2 workspace
       id: build_workspace
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
-      run: |
-        docker exec ros-container sh -c ". /opt/ros/${{ matrix.rosdistro }}/setup.sh" &&
-        docker exec ros-container sh -c "colcon build"
+      run: docker exec ros-container sh -c ". /opt/ros/${{ matrix.rosdistro }}/setup.sh"
+    - name: Set up ROS2 workspace:build
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
+      run: docker exec ros-container sh -c "colcon build"
         
     - name: test action commit msg flg
       if: "! contains(github.event.head_commit.message, 'test')"
