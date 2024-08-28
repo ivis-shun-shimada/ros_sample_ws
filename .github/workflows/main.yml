@@ -11,11 +11,8 @@ jobs:
       matrix:
        rosdistro:
          - humble
-    #container:
-    # image: ghcr.io/ivis-shun-shimada/base-humble-image:v2
       
     steps:
-
     - name: create src dir
       run: |
         mkdir -p src
@@ -68,7 +65,7 @@ jobs:
     - name: Set up ROS2 workspace:build
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker exec ros-container sh -c "colcon build"
-        
-    - name: test action commit msg flg
-      if: "! contains(github.event.head_commit.message, 'test')"
-      run: echo "commit message not input test!"
+    - name: Commit docker continaer
+      run: docker commit my_container ghcr.io/ivis-shun-shimada/base-humble-image:v2
+    - name: Push docker image
+      run: docker push ghcr.io/ivis-shun-shimada/base-humble-image:v2
