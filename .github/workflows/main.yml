@@ -43,7 +43,7 @@ jobs:
     - name: docker pull
       run: docker pull ghcr.io/ivis-shun-shimada/base-humble-image:v2
     - name: docker run
-      run: docker run -d --name ros-container ghcr.io/ivis-shun-shimada/base-humble-image:v2  
+      run: docker run -id --name ros-container ghcr.io/ivis-shun-shimada/base-humble-image:v2  
     - name: Install dependencies:rosdep init
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker exec ros-container sh -c "sudo rosdep init"
