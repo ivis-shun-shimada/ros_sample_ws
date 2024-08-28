@@ -33,7 +33,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-ros-
     - name: check dir
-      run: ls -l
+      run: cd simple_topic && pwd
     - name: Cache not restored (package.xml change)
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: echo "on rosdep install"
