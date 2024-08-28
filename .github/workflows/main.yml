@@ -16,24 +16,27 @@ jobs:
       
     steps:
 
-    - name: test dir
+    - name: create src dir
       run: |
-        mkdir -p test_dir
-        echo "Hello, World!" > test_dir/myfile.txt
+        mkdir -p src_dir
+        echo "cache" > src_dir/cache
 
     - name: Check out repository code
       uses: actions/checkout@v4
-      
+      with:
+        path: $(pwd)/src/
     - name: Cache ROS package.xml
       id: cache-ros-packages
       uses: actions/cache@v2
       with:
-        path: test_dir
+        path: src_dir/cache
         key: ${{ runner.os }}-ros-${{ hashFiles('**/package.xml') }}
         restore-keys: |
           ${{ runner.os }}-ros-
+          
     - name: check dir
-      run: cd simple_topic && pwd
+      run: cd src && ls -l
+      
     - name: Cache not restored (package.xml change)
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: echo "on rosdep install"
@@ -44,7 +47,7 @@ jobs:
     - name: docker pull
       run: docker pull ghcr.io/ivis-shun-shimada/base-humble-image:v2
     - name: docker run
-      run: docker run -id --name ros-container ghcr.io/ivis-shun-shimada/base-humble-image:v2  
+      run: docker run -id -v $(pwd)/src:/root/ros2_ws/src --name ros-container ghcr.io/ivis-shun-shimada/base-humble-image:v2  
     - name: Install dependencies:rosdep init
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker exec ros-container sh -c "sudo rosdep init"
