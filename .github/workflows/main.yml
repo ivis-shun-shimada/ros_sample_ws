@@ -65,10 +65,8 @@ jobs:
       if: "! contains(github.event.head_commit.message, 'test')"
       run: echo "commit message not input test!"
       
-  image_update:
-    runs-on: ubuntu-22.04
-    steps:
-    - name: push image
-      if: ros2_build.steps.cache-ros-packages.outputs.cache-hit != 'true'
-      run: |
-        echo "package.xml change, image update"
+    - name: docker exit
+      run: exit
+    - name: docekr check
+      run: docker ps && docker images
+      
