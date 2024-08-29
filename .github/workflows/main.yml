@@ -7,9 +7,9 @@ on:
 jobs:
   ros2_build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+    #permissions:
+    #  contents: read
+    #  packages: write
     strategy:
       matrix:
         image_user_name: 
@@ -78,6 +78,7 @@ jobs:
         "
     - name: Set up ROS2 workspace & build
       id: build_test
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker exec ${{ matrix.container_name }} sh -c 
         "
         . /opt/ros/${{ matrix.rosdistro }}/setup.sh;
