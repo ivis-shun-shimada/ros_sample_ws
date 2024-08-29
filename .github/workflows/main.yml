@@ -7,9 +7,9 @@ on:
 jobs:
   ros2_build:
     runs-on: ubuntu-latest
-    #permissions:
-    #  contents: read
-    #  packages: write
+    permissions:
+      contents: read
+      packages: write
     strategy:
       matrix:
         image_user_name: 
