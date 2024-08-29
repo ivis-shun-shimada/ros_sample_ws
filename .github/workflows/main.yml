@@ -49,12 +49,12 @@ jobs:
       if: steps.cache-ros-packages.outputs.cache-hit == 'true'
       run: echo "off rosdep install"
       
-    #- name: Log in to GitHub Container Registry
-    #  uses: docker/login-action@v3
-    #  with:
-    #    registry: ghcr.io
-    #    username: ${{ github.actor }}
-    #    password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Docker pull
       run: docker pull ghcr.io/${{ matrix.image_user_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }}  
