@@ -15,7 +15,7 @@ jobs:
         image_user_name: 
           - ivis-shun-shimada
         image_name:
-          - humble-image
+          - base-humble-image
         image_tag:
           - v2
         container_name:
