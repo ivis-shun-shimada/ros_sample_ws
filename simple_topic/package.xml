@@ -7,9 +7,6 @@
   <maintainer email="shun.shimada@ivis.co.jp">ivis</maintainer>
   <license>TODO: License declaration</license>
 
-
-
-
   
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>rclcpp</depend>
