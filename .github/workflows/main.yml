@@ -15,9 +15,9 @@ jobs:
         image_owner_name: 
           - ivis-shun-shimada
         image_name:
-          - base-humble-image
+          - humble-image
         image_tag:
-          - v2
+          - latest
         container_name:
           - ros-container
         rosdistro: 
