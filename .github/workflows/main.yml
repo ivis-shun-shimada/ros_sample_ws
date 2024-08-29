@@ -64,14 +64,15 @@ jobs:
     - name: docker run
       run: docker run -id -v $(pwd)/src:/root/ros2_ws/src --name ${{ matrix.container_name }} ghcr.io/${{ matrix.image_user_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }} 
       
-    - if: steps.cache-ros-packages.outputs.cache-hit != 'true'
     - name: Install dependencies:rosdep init
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker exec ${{ matrix.container_name }} sh -c 
         "
         rm -f /etc/ros/rosdep/sources.list.d/20-default.list;
         sudo rosdep init
         "
     - name: Install dependencies:rosdep install
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker exec ${{ matrix.container_name }} sh -c 
         "
         rosdep update;
@@ -79,9 +80,12 @@ jobs:
         rosdep install --from-path . -i -y --rosdistro ${{ matrix.rosdistro }}
         "
     - name: Set up ROS2 workspace:build
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker exec ${{ matrix.container_name }} sh -c ". /opt/ros/${{ matrix.rosdistro }}/setup.sh; colcon build"
     - name: Commit docker continaer
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker commit ${{ matrix.container_name }} ghcr.io/${{ matrix.image_user_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }}  
     - name: Push docker image
+      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker push ghcr.io/${{ matrix.image_user_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }}  
 
