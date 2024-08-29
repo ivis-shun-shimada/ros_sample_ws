@@ -93,7 +93,7 @@ jobs:
       run: echo "result - failure" && exit 1
       
     - name: Test push file
-      run: echo "test" > test.txt
+      run: docker exec ${{ matrix.container_name }} sh -c "echo 'test' > test.txt"
       
     - name: Commit docker continaer
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
