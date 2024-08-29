@@ -12,7 +12,7 @@ jobs:
       packages: write
     strategy:
       matrix:
-        image_user_name: 
+        image_owner_name: 
           - ivis-shun-shimada
         image_name:
           - base-humble-image
@@ -57,9 +57,9 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Docker pull
-      run: docker pull ghcr.io/${{ matrix.image_user_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }}  
+      run: docker pull ghcr.io/${{ matrix.image_owner_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }}  
     - name: Docker run
-      run: docker run -id -v $(pwd)/src:/root/ros2_ws/src --name ${{ matrix.container_name }} ghcr.io/${{ matrix.image_user_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }} 
+      run: docker run -id -v $(pwd)/src:/root/ros2_ws/src --name ${{ matrix.container_name }} ghcr.io/${{ matrix.image_owner_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }} 
       
     - name: Install dependencies:rosdep init
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
@@ -97,8 +97,8 @@ jobs:
       
     - name: Commit docker continaer
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
-      run: docker commit ${{ matrix.container_name }} ghcr.io/${{ matrix.image_user_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }}  
+      run: docker commit ${{ matrix.container_name }} ghcr.io/${{ matrix.image_owner_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }}  
     - name: Push docker image
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
-      run: docker push ghcr.io/${{ matrix.image_user_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }}  
+      run: docker push ghcr.io/${{ matrix.image_owner_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }}  
 
