@@ -77,11 +77,20 @@ jobs:
         rosdep install --from-path . -i -y --rosdistro ${{ matrix.rosdistro }}
         "
     - name: Set up ROS2 workspace & build
+      id: build_test
       run: docker exec ${{ matrix.container_name }} sh -c 
         "
         . /opt/ros/${{ matrix.rosdistro }}/setup.sh;
         colcon build
         "
+    - name: Build_test command success
+      if: steps.build_test.outcome == 'success'
+      run: echo "result - success"
+
+    - name: Build_test command failure
+      if: steps.build_test.outcome == 'failure'
+      run: echo "result - failure" && exit 1
+      
     - name: Test push file
       run: echo "test" > test.txt
       
