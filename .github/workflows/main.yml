@@ -92,9 +92,6 @@ jobs:
       if: steps.build_test.outcome == 'failure'
       run: echo "result - failure" && exit 1
       
-    - name: Test push file
-      run: docker exec ${{ matrix.container_name }} sh -c "echo 'test' > test.txt"
-      
     - name: Commit docker continaer
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker commit ${{ matrix.container_name }} ghcr.io/${{ matrix.image_owner_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }}  
