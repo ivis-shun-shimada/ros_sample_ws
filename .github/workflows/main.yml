@@ -24,15 +24,15 @@ jobs:
           - humble
       
     steps:
-    - name: create src dir
-      run: |
-        mkdir -p src
-        echo "cache" > src/cache
-
     - name: Check out repository code
       uses: actions/checkout@v4
       with:
         path: src
+    - name: Create src dir & cache file
+      run: |
+        mkdir -p src
+        echo "cache" > src/cache
+    
     - name: Cache ROS package.xml
       id: cache-ros-packages
       uses: actions/cache@v2
@@ -42,9 +42,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-ros-
           
-    - name: check dir
-      run: cd src && ls -l
-      
     - name: Cache not restored (package.xml change)
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: echo "on rosdep install"
@@ -59,9 +56,9 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
         
-    - name: docker pull
+    - name: Docker pull
       run: docker pull ghcr.io/${{ matrix.image_user_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }}  
-    - name: docker run
+    - name: Docker run
       run: docker run -id -v $(pwd)/src:/root/ros2_ws/src --name ${{ matrix.container_name }} ghcr.io/${{ matrix.image_user_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }} 
       
     - name: Install dependencies:rosdep init
@@ -79,9 +76,15 @@ jobs:
         apt-get update;
         rosdep install --from-path . -i -y --rosdistro ${{ matrix.rosdistro }}
         "
-    - name: Set up ROS2 workspace:build
-      if: steps.cache-ros-packages.outputs.cache-hit != 'true'
-      run: docker exec ${{ matrix.container_name }} sh -c ". /opt/ros/${{ matrix.rosdistro }}/setup.sh; colcon build"
+    - name: Set up ROS2 workspace & build
+      run: docker exec ${{ matrix.container_name }} sh -c 
+        "
+        . /opt/ros/${{ matrix.rosdistro }}/setup.sh;
+        colcon build
+        "
+    - name: Test push file
+      run: echo "test" > test.txt
+      
     - name: Commit docker continaer
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
       run: docker commit ${{ matrix.container_name }} ghcr.io/${{ matrix.image_user_name }}/${{ matrix.image_name }}:${{ matrix.image_tag }}  
