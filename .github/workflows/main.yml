@@ -68,10 +68,7 @@ jobs:
     #  run: docker exec ${{ matrix.container_name }} sh -c "sudo rosdep init"
     - name: Install dependencies:rosdep update
       if: steps.cache-ros-packages.outputs.cache-hit != 'true'
-      run: |
-        docker exec ${{ matrix.container_name }} sh -c "rosdep update" &&
-        docker exec ${{ matrix.container_name }} sh -c "apt-get update" &&
-        docker exec ${{ matrix.container_name }} sh -c "rosdep install --from-path . -i -y --rosdistro ${{ matrix.rosdistro }}"
+      run: docker exec ${{ matrix.container_name }} sh -c "rosdep update; apt-get update; rosdep install --from-path . -i -y --rosdistro ${{ matrix.rosdistro }}
     #- name: Install dependencies:apt update
     #  if: steps.cache-ros-packages.outputs.cache-hit != 'true'
     #  run: docker exec ${{ matrix.container_name }} sh -c "apt-get update"
